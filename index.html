@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato | Food Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .potato-gradient { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <nav class="sticky top-0 z-50 bg-white border-b border-gray-100 px-4 py-3 shadow-sm">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            <h1 class="text-3xl font-black text-[#F59E0B] italic tracking-tighter cursor-pointer">potato</h1>
+            
+            <div class="hidden md:flex flex-1 items-center bg-white border border-gray-200 shadow-sm rounded-xl px-4 py-2 h-12 max-w-2xl ml-4">
+                <div class="flex items-center gap-2 border-r border-gray-200 pr-4 min-w-[180px]">
+                    <i data-lucide="map-pin" class="text-[#F59E0B] w-5"></i>
+                    <span class="text-sm text-gray-700 truncate">Mysore, India</span>
+                    <i data-lucide="chevron-down" class="text-gray-400 w-4"></i>
+                </div>
+                <div class="flex items-center gap-3 pl-4 w-full">
+                    <i data-lucide="search" class="text-gray-400 w-5"></i>
+                    <input type="text" placeholder="Search for restaurant, cuisine or a dish" class="w-full outline-none text-sm font-light">
+                </div>
+            </div>
+
+            <div class="flex gap-6 text-gray-500 font-medium">
+                <span class="hover:text-black cursor-pointer hidden sm:block">Log in</span>
+                <span class="hover:text-black cursor-pointer hidden sm:block">Sign up</span>
+                <i data-lucide="user" class="sm:hidden"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 pb-24">
+        
+        <section class="py-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-8">Inspiration for your first order</h2>
+            <div class="flex overflow-x-auto gap-8 no-scrollbar pb-4" id="category-list">
+                </div>
+        </section>
+
+        <div class="sticky top-[72px] z-40 bg-white/95 backdrop-blur-sm py-4 flex gap-3 overflow-x-auto no-scrollbar mb-6">
+            <button class="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-gray-50">
+                <i data-lucide="sliders-horizontal" class="w-4"></i> Filters
+            </button>
+            <button class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-500 whitespace-nowrap">Rating: 4.0+</button>
+            <button class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-500 whitespace-nowrap">Pure Veg</button>
+            <button class="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-500 whitespace-nowrap">Cuisines</button>
+        </div>
+
+        <h2 class="text-2xl font-semibold text-gray-800 mb-8">Best Food in Mysore</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="restaurant-grid">
+            </div>
+    </main>
+
+    <div id="cart-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-lg bg-gray-900 text-white p-4 rounded-2xl shadow-2xl flex justify-between items-center hidden transform transition-all duration-300 scale-95 opacity-0">
+        <div class="flex items-center gap-3">
+            <div class="bg-[#F59E0B] p-2 rounded-lg">
+                <i data-lucide="shopping-bag" class="w-5"></i>
+            </div>
+            <div>
+                <p class="font-bold text-sm" id="cart-text">1 Item added</p>
+                <p class="text-[10px] text-gray-400 italic">From The Golden Spud</p>
+            </div>
+        </div>
+        <button class="bg-white text-black px-6 py-2 rounded-xl font-bold text-sm hover:bg-gray-100 transition">
+            View Cart
+        </button>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Data
+        const categories = [
+            { name: 'Biryani', img: 'https://images.unsplash.com/photo-1563379091339-03b21bc4a4f8?w=300' },
+            { name: 'Burgers', img: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=300' },
+            { name: 'Pizza', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300' },
+            { name: 'Thali', img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300' },
+            { name: 'Cakes', img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300' },
+            { name: 'North Indian', img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300' }
+        ];
+
+        const restaurants = [
+            { id: 1, name: "The Golden Spud", rating: "4.4", time: "25", price: "250", img: "https://images.unsplash.com/photo-1518013045958-e116a7d9893b?w=800", offer: "₹125 OFF" },
+            { id: 2, name: "Potato Palace", rating: "4.1", time: "35", price: "400", img: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800", offer: "50% OFF" },
+            { id: 3, name: "Crispy Harvest", rating: "4.5", time: "20", price: "150", img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800", offer: "Free Delivery" },
+            { id: 4, name: "Tuber Treats", rating: "3.9", time: "40", price: "300", img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800", offer: "Buy 1 Get 1" }
+        ];
+
+        let cartCount = 0;
+
+        // Render Categories
+        const catList = document.getElementById('category-list');
+        categories.forEach(cat => {
+            catList.innerHTML += `
+                <div class="flex flex-col items-center min-w-[140px] cursor-pointer group">
+                    <div class="w-32 h-32 rounded-full overflow-hidden shadow-md">
+                        <img src="${cat.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <span class="mt-3 text-lg font-medium text-gray-600">${cat.name}</span>
+                </div>
+            `;
+        });
+
+        // Render Restaurants
+        const resGrid = document.getElementById('restaurant-grid');
+        restaurants.forEach(res => {
+            resGrid.innerHTML += `
+                <div onclick="addToCart()" class="group rounded-2xl p-3 hover:shadow-2xl border border-transparent hover:border-gray-100 transition-all duration-300 cursor-pointer">
+                    <div class="relative h-60 rounded-2xl overflow-hidden mb-4">
+                        <img src="${res.img}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-3 left-0 bg-[#F59E0B] text-white px-2 py-1 text-[11px] font-bold rounded-r-sm italic">
+                            ${res.offer}
+                        </div>
+                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur px-2 py-1 rounded text-[10px] font-bold shadow-sm">
+                            ${res.time} min
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-xl font-bold text-gray-800 truncate">${res.name}</h3>
+                        <div class="flex items-center bg-green-700 text-white px-1.5 py-0.5 rounded-lg text-xs font-bold">
+                            ${res.rating} ★
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <p>Continental, Fast Food</p>
+                        <p>₹${res.price} for one</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-dotted border-gray-200 flex items-center gap-2">
+                        <div class="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i data-lucide="trending-up" class="w-2.5 text-blue-600"></i>
+                        </div>
+                        <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider italic">1,200+ orders recently</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Cart Logic
+        function addToCart() {
+            cartCount++;
+            const cartBar = document.getElementById('cart-bar');
+            const cartText = document.getElementById('cart-text');
+            
+            cartText.innerText = `${cartCount} Item${cartCount > 1 ? 's' : ''} added`;
+            
+            cartBar.classList.remove('hidden');
+            setTimeout(() => {
+                cartBar.classList.remove('scale-95', 'opacity-0');
+                cartBar.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+        
+        // Re-initialize icons for dynamic content
+        lucide.createIcons();
+    </script>
+</body>
+</html>
